@@ -1,41 +1,50 @@
 import { create } from 'zustand';
 import api from '../services/api';
 
-const useBookingStore = create((set, get) => ({
-  selectedStalls: [],
+export const useBookingStore = create((set, get) => ({
+  selectedStalls: [],        // [{ stallId, row, column, category }]
   currentEvent: null,
-  lockedStalls: [],
+  lockedStalls: [],          // [stallId]
   lockExpiry: null,
   isLoading: false,
   totalAmount: 0,
 
-  setSelectedStalls: (stalls) => {
-    const totalAmount = stalls.reduce((sum, stall) => sum + stall.category.price, 0);
-    set({ selectedStalls: stalls, totalAmount });
-  },
+  setCurrentEvent: (event) => set({ currentEvent: event }),
 
-  setCurrentEvent: (event) => {
-    set({ currentEvent: event });
+  // Accepts array OR updater function
+  setSelectedStalls: (updater) => {
+    const prev = get().selectedStalls;
+    const next =
+      typeof updater === 'function'
+        ? updater(prev)
+        : Array.isArray(updater)
+        ? updater
+        : prev;
+
+    const totalAmount = next.reduce(
+      (sum, stall) => sum + (stall?.category?.price || 0),
+      0
+    );
+
+    set({ selectedStalls: next, totalAmount });
   },
 
   lockStalls: async (stallIds, eventId) => {
     set({ isLoading: true });
     try {
-      const response = await api.post('/stalls/lock', { stallIds, eventId });
-      const { expiresAt } = response.data;
-      
-      set({ 
-        lockedStalls: stallIds, 
+      const res = await api.post('/stalls/lock', { stallIds, eventId });
+      const { expiresAt } = res.data;
+      set({
+        lockedStalls: stallIds,
         lockExpiry: new Date(expiresAt),
-        isLoading: false 
+        isLoading: false,
       });
-      
       return { success: true };
     } catch (error) {
       set({ isLoading: false });
-      return { 
-        success: false, 
-        message: error.response?.data?.message || 'Failed to lock stalls' 
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to lock stalls',
       };
     }
   },
@@ -44,49 +53,35 @@ const useBookingStore = create((set, get) => ({
     set({ isLoading: true });
     try {
       await api.post('/stalls/release', { eventId });
-      set({ 
-        lockedStalls: [], 
+      set({
+        lockedStalls: [],
         lockExpiry: null,
         selectedStalls: [],
         totalAmount: 0,
-        isLoading: false 
+        isLoading: false,
       });
-      
       return { success: true };
     } catch (error) {
       set({ isLoading: false });
-      return { 
-        success: false, 
-        message: error.response?.data?.message || 'Failed to release stalls' 
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to release stalls',
       };
     }
   },
 
   getLockedStalls: async (eventId) => {
     try {
-      const response = await api.get(`/stalls/locked/${eventId}`);
-      const { lockedStalls, expiresAt } = response.data;
-      
-      if (lockedStalls.length > 0 && expiresAt) {
-        set({ 
-          lockedStalls: lockedStalls.map(s => s.stallId),
-          lockExpiry: new Date(expiresAt)
+      const res = await api.get(`/stalls/locked/${eventId}`);
+      const { lockedStalls, expiresAt } = res.data;
+      if (lockedStalls.length && expiresAt) {
+        set({
+          lockedStalls: lockedStalls.map((s) => s.stallId),
+          lockExpiry: new Date(expiresAt),
         });
       }
-    } catch (error) {
-      console.error('Failed to get locked stalls:', error);
+    } catch (e) {
+      console.error('Failed to get locked stalls', e);
     }
   },
-
-  clearBookingData: () => {
-    set({
-      selectedStalls: [],
-      currentEvent: null,
-      lockedStalls: [],
-      lockExpiry: null,
-      totalAmount: 0
-    });
-  }
 }));
-
-export { useBookingStore };

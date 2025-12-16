@@ -13,21 +13,20 @@ import {
 } from '@heroicons/react/24/outline';
 import { format, parseISO } from 'date-fns';
 import { eventService } from '../services/eventService';
-import { useAuthStore } from '../store/authStore';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ErrorMessage from '../components/common/ErrorMessage';
+import { useAuth } from '../context/AuthContext';
 
 const EventDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuth();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchEvent();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchEvent = async () => {
@@ -45,7 +44,7 @@ const EventDetailsPage = () => {
   };
 
   const handleBookStall = () => {
-    if (!isAuthenticated()) {
+    if (!isAuthenticated) {
       navigate('/login', { state: { from: `/events/${id}/select-stalls` } });
     } else {
       navigate(`/events/${id}/select-stalls`);
@@ -362,7 +361,7 @@ const EventDetailsPage = () => {
                   : 'Select stalls'}
               </button>
 
-              {!isAuthenticated() && event.status === 'live' && (
+              {!isAuthenticated && event.status === 'live' && (
                 <p className="mt-2 text-[11px] text-slate-500 text-center">
                   Login required to book stalls.
                 </p>

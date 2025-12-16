@@ -43,65 +43,66 @@ function App() {
   
   return (
     <BrowserRouter
-      // future={{
-      //   v7_startTransition: true,
-      //   v7_relativeSplatPath: true,
-      // }}
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
     >
       <ScrollToTop/>
       <Routes>
         {/* User layout */}
-        <Route element={<UserLayout />}>
-          {/* Public */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/events/:id" element={<EventDetailsPage />} />
-          <Route path="/login" element={<AuthPage />} />
-          <Route path="/register" element={<AuthPage />} />
-          <Route path="/verify-otp" element={<VerifyOTPPage />} />
+       {/* User layout - wraps all user pages */}
+<Route element={<UserLayout />}>
+  {/* Public routes */}
+  <Route path="/" element={<HomePage />} />
+  <Route path="/events" element={<EventsPage />} />
+  <Route path="/events/:id" element={<EventDetailsPage />} />
+  <Route path="/login" element={<AuthPage />} />
+  <Route path="/register" element={<AuthPage />} />
+  <Route path="/verify-otp" element={<VerifyOTPPage />} />
 
-          {/* Protected user routes */}
-          <Route
-            path="/events/:id/select-stalls"
-            element={
-              <ProtectedRoute>
-                <StallSelectionPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/checkout"
-            element={
-              <ProtectedRoute>
-                <CheckoutPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/bookings"
-            element={
-              <ProtectedRoute>
-                <BookingsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/bookings/:bookingId"
-            element={
-              <ProtectedRoute>
-                <BookingDetailsPage />
-              </ProtectedRoute>
-            }
-          />
-        </Route>
+  {/* Protected routes - individually wrapped (this fixes dynamic routes) */}
+  <Route
+    path="/checkout"
+    element={
+      <ProtectedRoute>
+        <CheckoutPage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/profile"
+    element={
+      <ProtectedRoute>
+        <ProfilePage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/bookings"
+    element={
+      <ProtectedRoute>
+        <BookingsPage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/bookings/:bookingId"
+    element={
+      <ProtectedRoute>
+        <BookingDetailsPage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/events/:id/select-stalls"
+    element={
+      <ProtectedRoute>
+        <StallSelectionPage />
+      </ProtectedRoute>
+    }
+  />
+</Route>
 
         {/* Admin layout */}
        <Route path="/admin" element={<AdminRoute />}>
