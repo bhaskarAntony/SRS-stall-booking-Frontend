@@ -25,7 +25,7 @@ const UsersList = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://srs-stalls-backend.onrender.com/api/admin/users/list');
+      const response = await fetch('https://srs-stalls-backend-1.onrender.com/api/admin/users/list');
       const data = await response.json();
       const list = data.userslist || [];
       setUsers(list);

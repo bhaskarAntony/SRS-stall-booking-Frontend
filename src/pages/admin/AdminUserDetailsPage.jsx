@@ -36,7 +36,7 @@ const AdminUserDetailsPage = () => {
     //             status: filter === 'all' ? undefined : filter,
     //           };
       const [userRes, bookingsRes] = await Promise.all([
-        fetch(`https://srs-stalls-backend.onrender.com/api/admin/user/${userId}`),
+        fetch(`https://srs-stalls-backend-1.onrender.com/api/admin/user/${userId}`),
         
       ]);
 
