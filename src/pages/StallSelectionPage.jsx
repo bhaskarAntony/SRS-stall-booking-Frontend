@@ -13,105 +13,6 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import ErrorMessage from '../components/common/ErrorMessage';
 import toast from 'react-hot-toast';
 
-/**
- * Small inline StallGrid with full orange/blue ticket style
- * Uses status fields: status: 'available' | 'booked' | 'locked-other'
- */
-// const StallGrid = ({
-//   stalls,
-//   layout,
-//   selectedStalls,
-//   lockedStalls,
-//   onStallSelect,
-//   readonly,
-// }) => {
-//   const isSelected = (stallId) =>
-//     selectedStalls.some((s) => s.stallId === stallId);
-//   const isLockedByYou = (stallId) =>
-//     lockedStalls && lockedStalls.includes(stallId);
-
-//   const getStallClasses = (stall) => {
-//     const base =
-//       'flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl border text-[11px] sm:text-xs font-semibold transition-colors';
-
-//     if (stall.status === 'booked') {
-//       return (
-//         base +
-//         ' bg-slate-200 border-slate-300 text-slate-500 cursor-not-allowed line-through'
-//       );
-//     }
-
-//     if (stall.status === 'locked-other') {
-//       return (
-//         base +
-//         ' bg-amber-200 border-amber-300 text-amber-900 cursor-not-allowed'
-//       );
-//     }
-
-//     if (isLockedByYou(stall.stallId)) {
-//       return (
-//         base +
-//         ' bg-emerald-500 border-emerald-500 text-white shadow-[0_0_0_1px_rgba(16,185,129,0.5)]'
-//       );
-//     }
-
-//     if (isSelected(stall.stallId)) {
-//       return (
-//         base +
-//         ' bg-orange-500 border-orange-500 text-white shadow-[0_0_0_1px_rgba(249,115,22,0.5)]'
-//       );
-//     }
-
-//     // available
-//     return (
-//       base +
-//       ' bg-slate-50 border-slate-300 text-slate-700 hover:bg-orange-50 hover:border-orange-300 cursor-pointer'
-//     );
-//   };
-
-//   const handleClick = (stall) => {
-//     if (readonly) return;
-//     if (stall.status === 'booked' || stall.status === 'locked-other') return;
-//     onStallSelect(stall);
-//   };
-
-//   const rows = Array.from({ length: layout.rows || 0 }, (_, r) => r + 1);
-//   const cols = Array.from({ length: layout.columns || 0 }, (_, c) => c + 1);
-
-//   return (
-//     <div className="inline-flex flex-col gap-2 bg-slate-50 rounded-2xl px-4 py-4 border border-slate-200">
-//       {rows.map((row) => (
-//         <div key={row} className="flex gap-2 justify-center">
-//           {cols.map((col) => {
-//             const stall =
-//               stalls.find((s) => s.row === row && s.column === col) || null;
-
-//             if (!stall) {
-//               return (
-//                 <div
-//                   key={`${row}-${col}`}
-//                   className="h-10 w-10 sm:h-11 sm:w-11"
-//                 />
-//               );
-//             }
-
-//             return (
-//               <button
-//                 key={stall.stallId}
-//                 type="button"
-//                 onClick={() => handleClick(stall)}
-//                 className={getStallClasses(stall)}
-//               >
-//                 {stall.stallId}
-//               </button>
-//             );
-//           })}
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
 const StallGrid = ({
   stalls,
   layout,
@@ -136,7 +37,7 @@ const StallGrid = ({
 
   const getClasses = (state) => {
     const base =
-      'flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl border text-[11px] sm:text-xs font-semibold transition-colors';
+      'flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-md border text-[9px] sm:text-[11px] font-semibold transition-colors';
     switch (state) {
       case 'booked':
         return (
@@ -165,9 +66,10 @@ const StallGrid = ({
         );
       case 'empty':
       default:
+        // Empty stalls now show as small gray boxes (old style)
         return (
           base +
-          ' bg-slate-100 border-slate-200 text-slate-300 cursor-default'
+          ' bg-gray-100 border-gray-300 text-transparent cursor-default'
         );
     }
   };
@@ -183,11 +85,10 @@ const StallGrid = ({
   const cols = Array.from({ length: layout.columns || 0 }, (_, c) => c + 1);
 
   return (
-    <div className="inline-flex flex-col gap-1.5 bg-slate-50 rounded-2xl px-4 py-4 border border-slate-200">
+    <div className="inline-flex flex-col gap-1 bg-slate-50 rounded-xl px-2 py-2 sm:px-3 sm:py-3 border border-slate-200">
       {rows.map((row) => (
-        <div key={row} className="flex gap-1.5 justify-center">
+        <div key={row} className="flex gap-1 justify-center">
           {cols.map((col) => {
-            // adapt this matching to your data shape (row/column or stallId)
             const stall =
               stalls.find((s) => s.row === row && s.column === col) || null;
             const state = getStallState(stall);
@@ -198,7 +99,7 @@ const StallGrid = ({
                 onClick={() => handleClick(stall, state)}
                 className={getClasses(state)}
               >
-                {stall ? stall.stallId : ''}
+                {stall ? stall.stallId.replace('R', '').replace('C', '-') : ''}
               </button>
             );
           })}
@@ -340,7 +241,7 @@ const StallSelectionPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <LoadingSpinner size="sm" text="Loading stall information..." />
       </div>
     );
@@ -365,10 +266,10 @@ const StallSelectionPage = () => {
   const availableStallsCount = event?.availableStalls ?? 0;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      {/* Top header */}
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      {/* Header */}
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="max-w-5xl mx-auto px-3 sm:px-4 lg:px-6 py-3 flex items-center justify-between gap-3">
+        <div className="max-w-5xl mx-auto w-full px-3 sm:px-4 lg:px-6 py-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <button
               type="button"
@@ -385,7 +286,7 @@ const StallSelectionPage = () => {
                 {event?.name}
               </p>
               <p className="text-[11px] text-slate-500 truncate">
-                Tap on the layout to choose your stalls. Orange = selected, green = locked.
+                Tap layout to choose stalls. Orange = selected, green = locked.
               </p>
             </div>
           </div>
@@ -405,22 +306,24 @@ const StallSelectionPage = () => {
       </header>
 
       {/* Main */}
-      <main className="flex-1">
-        <div className="max-w-5xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5 pb-24 sm:pb-6">
+      <main className="flex-1 overflow-y-auto">
+        <div className="max-w-5xl mx-auto w-full px-3 sm:px-4 lg:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5 pb-24 sm:pb-6">
           <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 sm:gap-5">
-            {/* Grid */}
+            {/* Grid section */}
             <section className="xl:col-span-3 space-y-3">
               <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm font-semibold text-slate-900">
                     Stall layout ({layout.rows} × {layout.columns})
                   </p>
-                  <p className="text-[11px] text-slate-500 hidden sm:block">
-                    Drag horizontally if layout is wide
+                  <p className="text-[11px] text-slate-500 sm:hidden">
+                    ← Swipe sideways to see more →
                   </p>
                 </div>
-                <div className="w-full overflow-x-auto">
-                  <div className="min-w-max flex justify-center">
+
+                {/* Horizontal scroll wrapper */}
+                <div className="w-full overflow-x-auto -mx-3 px-3 scrollbar-hide">
+                  <div className="inline-block min-w-full">
                     <StallGrid
                       stalls={stalls}
                       layout={layout}
@@ -465,7 +368,7 @@ const StallSelectionPage = () => {
                 </div>
               </div>
 
-              {/* Categories (color legend for pricing) */}
+              {/* Categories */}
               {categories && categories.length > 0 && (
                 <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3">
                   <h3 className="text-sm font-semibold text-slate-900 mb-2.5">
@@ -574,9 +477,7 @@ const StallSelectionPage = () => {
                     <button
                       type="button"
                       onClick={handleLockStalls}
-                      disabled={
-                        selectedStalls.length === 0 || lockingStalls
-                      }
+                      disabled={selectedStalls.length === 0 || lockingStalls}
                       className="w-full inline-flex items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-sky-500 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {lockingStalls
@@ -604,9 +505,12 @@ const StallSelectionPage = () => {
         </div>
       </main>
 
-      {/* Mobile sticky bottom bar */}
-      <div className="sm:hidden fixed inset-x-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur px-3 py-2.5"  style={{bottom:"63px"}}>
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
+      {/* Mobile bottom bar */}
+      <div
+        className="sm:hidden fixed inset-x-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur px-3 py-2.5"
+        style={{ bottom: '63px' }}
+      >
+        <div className="max-w-5xl mx-auto w-full flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="text-[11px] text-slate-500">
               {displayStalls.length} stall
@@ -649,9 +553,7 @@ const StallSelectionPage = () => {
               <button
                 type="button"
                 onClick={handleLockStalls}
-                disabled={
-                  selectedStalls.length === 0 || lockingStalls
-                }
+                disabled={selectedStalls.length === 0 || lockingStalls}
                 className="rounded-full bg-gradient-to-r from-orange-500 to-sky-500 px-4 py-1.5 text-[11px] font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {lockingStalls ? 'Locking...' : 'Lock & continue'}
