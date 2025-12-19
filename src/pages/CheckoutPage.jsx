@@ -8,14 +8,14 @@ import {
   CurrencyRupeeIcon,
 } from '@heroicons/react/24/outline';
 import { useBookingStore } from '../store/bookingStore';
-import { useAuthStore } from '../store/authStore';
 import { paymentService } from '../services/paymentService';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { useAuth } from '../context/AuthContext';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const {
     selectedStalls,
     currentEvent,
@@ -56,6 +56,13 @@ const CheckoutPage = () => {
     return () => clearInterval(interval);
   }, [lockExpiry, lockedStalls, navigate, currentEvent]);
 
+  useEffect(() => {
+  return () => {
+    // Cleanup on unmount (or success)
+    setTimeLeft(null);
+  };
+}, []);
+  
   const handlePayment = async () => {
     if (!currentEvent || !lockedStalls || lockedStalls.length === 0) {
       toast.error('Stall selection is missing. Please select stalls again.');
@@ -76,6 +83,7 @@ const CheckoutPage = () => {
         lockedStalls,
         currentEvent._id,
       );
+      console.log(orderData)
 
       const options = {
         key: orderData.keyId,
@@ -94,11 +102,12 @@ const CheckoutPage = () => {
             };
 
             const result = await paymentService.verifyPayment(verificationData);
-
+            console.log(result)
             toast.success('Payment successful! Booking confirmed.');
             clearBookingData();
             navigate(`/bookings/${result.booking.bookingId}`);
           } catch (error) {
+            console.log(error)
             toast.error(
               'Payment verification failed. Please contact support.',
             );

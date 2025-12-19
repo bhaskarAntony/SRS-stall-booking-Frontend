@@ -217,6 +217,12 @@ const EventDetailsPage = () => {
                   </div>
                 </div>
               </div>
+              <hr />
+               <h2 className=" mt-5 text-sm font-semibold text-slate-900 mb-1.5">
+                Stall Layout
+              </h2>
+                <img src={event.image || 'https://static.vecteezy.com/system/resources/thumbnails/009/007/126/small/document-file-not-found-search-no-result-concept-illustration-flat-design-eps10-modern-graphic-element-for-landing-page-empty-state-ui-infographic-icon-vector.jpg'} alt="srs stall layout image" className="w-50" />
+
             </div>
 
             {/* Organizer */}

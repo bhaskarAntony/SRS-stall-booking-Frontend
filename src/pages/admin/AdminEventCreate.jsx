@@ -10,6 +10,7 @@ const AdminEventCreate = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    image:'',
     venue: {
       name: '',
       address: {
@@ -208,6 +209,20 @@ const AdminEventCreate = () => {
                   name="name"
                   required
                   value={formData.name}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  placeholder="Eg. Diwali Fest 2025"
+                />
+              </div>
+               <div>
+                <label className="block text-[11px] font-medium text-slate-600 mb-1.5">
+                  Stall Layout Image *
+                </label>
+                <input
+                  type="text"
+                  name="image"
+                  required
+                  value={formData.image}
                   onChange={handleChange}
                   className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
                   placeholder="Eg. Diwali Fest 2025"

@@ -84,4 +84,11 @@ export const useBookingStore = create((set, get) => ({
       console.error('Failed to get locked stalls', e);
     }
   },
+  clearBookingData: () => set({
+    selectedStalls: [],
+    currentEvent: null,
+    totalAmount: 0,
+    lockedStalls: [],
+    lockExpiry: null,
+  })
 }));

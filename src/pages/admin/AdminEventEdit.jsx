@@ -15,6 +15,7 @@ const AdminEventEdit = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    image:'',
     venue: {
       name: '',
       address: {
@@ -75,6 +76,7 @@ const AdminEventEdit = () => {
       setFormData({
         name: event.name || '',
         description: event.description || '',
+        image:event.image || '',
         venue: {
           name: event.venue?.name || '',
           address: {
@@ -264,6 +266,21 @@ const AdminEventEdit = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter event name"
+                />
+              </div>
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  Stall Layout Image *
+                </label>
+                <input
+                  type="url"
+                  id="image"
+                  name="image"
+                  required
+                  value={formData.image}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter Stall Layout Image URL"
                 />
               </div>
 
