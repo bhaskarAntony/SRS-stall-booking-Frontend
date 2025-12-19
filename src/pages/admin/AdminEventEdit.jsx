@@ -16,6 +16,8 @@ const AdminEventEdit = () => {
     name: '',
     description: '',
     image:'',
+     rows:0,
+    cols:0,
     venue: {
       name: '',
       address: {
@@ -67,7 +69,7 @@ const AdminEventEdit = () => {
       const response = await eventService.getEvent(id);
       const event = response.event;
       
-      // Format dates for input fields
+      
       const formatDate = (dateString) => {
         if (!dateString) return '';
         return new Date(dateString).toISOString().split('T')[0];
@@ -77,6 +79,8 @@ const AdminEventEdit = () => {
         name: event.name || '',
         description: event.description || '',
         image:event.image || '',
+        rows:event.rows || 0,
+        cols:event.cols || 0,
         venue: {
           name: event.venue?.name || '',
           address: {
@@ -176,7 +180,7 @@ const AdminEventEdit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validation
+    
     if (!formData.name || !formData.venue.name || !formData.dates.startDate || !formData.dates.endDate) {
       toast.error('Please fill in all required fields');
       return;
@@ -224,7 +228,7 @@ const AdminEventEdit = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {}
       <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center space-x-4">
@@ -248,7 +252,7 @@ const AdminEventEdit = () => {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Basic Information */}
+          {}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-6">Basic Information</h2>
             
@@ -300,6 +304,36 @@ const AdminEventEdit = () => {
                 />
               </div>
 
+                <div>
+                <label className="block text-[11px] font-medium text-slate-600 mb-1.5">
+                  Stall Layout Rows *
+                </label>
+                <input
+                  type="number"
+                  name="rows"
+                  required
+                  value={formData.rows}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  placeholder="10, 20 ..."
+                />
+              </div>
+
+               <div>
+                <label className="block text-[11px] font-medium text-slate-600 mb-1.5">
+                  Stall Layout Columns *
+                </label>
+                <input
+                  type="number"
+                  name="cols"
+                  required
+                  value={formData.cols}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  placeholder="10, 20 ..."
+                />
+              </div>
+
               <div>
                 <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
                   Status
@@ -320,7 +354,7 @@ const AdminEventEdit = () => {
             </div>
           </div>
 
-          {/* Venue Information */}
+          {}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-6">Venue Information</h2>
             
@@ -407,7 +441,7 @@ const AdminEventEdit = () => {
             </div>
           </div>
 
-          {/* Event Dates */}
+          {}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-6">Event Dates</h2>
             
@@ -459,7 +493,7 @@ const AdminEventEdit = () => {
             </div>
           </div>
 
-          {/* Organizer Information */}
+          {}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-6">Organizer Information</h2>
             
@@ -531,7 +565,7 @@ const AdminEventEdit = () => {
             </div>
           </div>
 
-          {/* Stall Categories */}
+          {}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">Stall Categories</h2>
@@ -599,7 +633,7 @@ const AdminEventEdit = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
+          {}
           <div className="flex justify-end space-x-4">
             <Link
               to="/admin/events"

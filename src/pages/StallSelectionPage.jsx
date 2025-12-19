@@ -1,4 +1,4 @@
-// src/pages/StallSelectionPage.jsx
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -57,16 +57,16 @@ const StallGrid = ({
       case 'selected':
         return (
           base +
-          ' bg-orange-500 border-orange-500 text-white shadow-[0_0_0_1px_rgba(249,115,22,0.5)]'
+          ' bg-orange-500 border-gray-900 text-white border-2'
         );
       case 'available':
         return (
           base +
-          ' bg-slate-50 border-slate-300 text-slate-700 hover:bg-orange-50 hover:border-orange-300 cursor-pointer'
+          'border-slate-300 text-slate-700 hover:bg-orange-50 hover:border-orange-300 cursor-pointer'
         );
       case 'empty':
       default:
-        // Empty stalls now show as small gray boxes (old style)
+        
         return (
           base +
           ' bg-gray-100 border-gray-300 text-transparent cursor-default'
@@ -96,10 +96,11 @@ const StallGrid = ({
               <button
                 key={stall?.stallId || `${row}-${col}`}
                 type="button"
+                style={{background:stall?.category?.color}}
                 onClick={() => handleClick(stall, state)}
                 className={getClasses(state)}
               >
-                {stall ? stall.stallId.replace('R', '').replace('C', '-') : ''}
+                {stall ? stall.stallId.replace('S', '').replace('C', '-') : ''}
               </button>
             );
           })}
@@ -136,7 +137,7 @@ const StallSelectionPage = () => {
   useEffect(() => {
     fetchEventStalls();
     getLockedStalls(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [id]);
 
   useEffect(() => {
@@ -175,7 +176,8 @@ const StallSelectionPage = () => {
 
       setEvent(eventResponse.event);
       setStalls(stallsResponse.stalls || []);
-      setLayout(stallsResponse.layout || { rows: 10, columns: 10 });
+      console.log(eventResponse.event);
+      setLayout({ rows: eventResponse.event.rows, columns: eventResponse.event.cols });
       setCategories(stallsResponse.categories || []);
       setCurrentEvent(eventResponse.event);
     } catch (err) {
@@ -267,7 +269,7 @@ const StallSelectionPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      {/* Header */}
+      {}
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="max-w-5xl mx-auto w-full px-3 sm:px-4 lg:px-6 py-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
@@ -305,11 +307,11 @@ const StallSelectionPage = () => {
         </div>
       </header>
 
-      {/* Main */}
+      {}
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-5xl mx-auto w-full px-3 sm:px-4 lg:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5 pb-24 sm:pb-6">
           <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 sm:gap-5">
-            {/* Grid section */}
+            {}
             <section className="xl:col-span-3 space-y-3">
               <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3">
                 <div className="flex items-center justify-between mb-2">
@@ -321,7 +323,7 @@ const StallSelectionPage = () => {
                   </p>
                 </div>
 
-                {/* Horizontal scroll wrapper */}
+                {}
                 <div className="w-full overflow-x-auto -mx-3 px-3 scrollbar-hide">
                   <div className="inline-block min-w-full">
                     <StallGrid
@@ -337,9 +339,9 @@ const StallSelectionPage = () => {
               </div>
             </section>
 
-            {/* Side column */}
+            {}
             <aside className="space-y-3">
-              {/* Legend */}
+              {}
               <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3">
                 <h3 className="text-sm font-semibold text-slate-900 mb-2.5">
                   Legend
@@ -368,7 +370,7 @@ const StallSelectionPage = () => {
                 </div>
               </div>
 
-              {/* Categories */}
+              {}
               {categories && categories.length > 0 && (
                 <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3">
                   <h3 className="text-sm font-semibold text-slate-900 mb-2.5">
@@ -398,7 +400,7 @@ const StallSelectionPage = () => {
                 </div>
               )}
 
-              {/* Selection summary */}
+              {}
               <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3">
                 <h3 className="text-sm font-semibold text-slate-900 mb-2.5">
                   {hasLocked ? 'Locked stalls' : 'Selected stalls'}
@@ -453,7 +455,7 @@ const StallSelectionPage = () => {
                 )}
               </div>
 
-              {/* Desktop actions */}
+              {}
               <div className="hidden sm:block space-y-2">
                 {hasLocked ? (
                   <>
@@ -505,7 +507,7 @@ const StallSelectionPage = () => {
         </div>
       </main>
 
-      {/* Mobile bottom bar */}
+      {}
       <div
         className="sm:hidden fixed inset-x-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur px-3 py-2.5"
         style={{ bottom: '63px' }}

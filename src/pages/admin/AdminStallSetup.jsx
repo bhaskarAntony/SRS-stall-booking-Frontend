@@ -18,10 +18,11 @@ const AdminStallSetup = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
-  const [gridSize, setGridSize] = useState({ rows: 10, columns: 10 });
+  const [gridSize, setGridSize] = useState({ rows: 20, columns: 10 });
   const [selectedStalls, setSelectedStalls] = useState(new Set());
   const [stallCategories, setStallCategories] = useState({});
   const [selectionMode, setSelectionMode] = useState('select');
+  const [highlightedStalls, setHighlightedStalls] = useState(new Set());
   const [activeCategoryId, setActiveCategoryId] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -43,6 +44,12 @@ const AdminStallSetup = () => {
       setError(null);
       const response = await eventService.getEvent(id);
       const eventData = response.event;
+      console.log(eventData);
+      setGridSize({
+        rows:eventData.rows,
+        columns:eventData.cols
+      })
+      
       setEvent(eventData);
 
       if (eventData.stallLayout?.activeStalls) {
@@ -53,7 +60,7 @@ const AdminStallSetup = () => {
           const stallKey = `${stall.row}-${stall.column}`;
           activeStalls.add(stallKey);
           if (stall.category) {
-            // Here we preserve full category object for now
+            
             categories[stallKey] = stall.category;
           }
         });
@@ -75,51 +82,74 @@ const AdminStallSetup = () => {
 
   const stallKeyFrom = (row, col) => `${row}-${col}`;
 
-  const handleStallToggle = (row, col) => {
-    const key = stallKeyFrom(row, col);
+ const handleStallToggle = (row, col) => {
+  const key = stallKeyFrom(row, col);
 
-    if (selectionMode === 'select') {
-      const next = new Set(selectedStalls);
-      if (next.has(key)) {
-        next.delete(key);
-        const nextCats = { ...stallCategories };
-        delete nextCats[key];
-        setStallCategories(nextCats);
-      } else {
-        next.add(key);
-      }
-      setSelectedStalls(next);
-    } else if (selectionMode === 'category' && activeCategoryId) {
-      if (selectedStalls.has(key)) {
-        const cat = categoriesById[activeCategoryId];
-        if (!cat) return;
-        setStallCategories((prev) => ({
-          ...prev,
-          [key]: {
-            _id: cat._id,
-            name: cat.name,
-            price: cat.price,
-            color: cat.color,
-          },
-        }));
-      }
+  if (selectionMode === 'select') {
+    
+    const next = new Set(highlightedStalls);
+    if (next.has(key)) {
+      next.delete(key);
+    } else {
+      next.add(key);
     }
-  };
+    setHighlightedStalls(next);
 
-  const handleMouseDown = (row, col) => {
-    setIsDragging(true);
-    handleStallToggle(row, col);
-  };
+    
+    if (!selectedStalls.has(key)) {
+      setSelectedStalls(new Set([...selectedStalls, key]));
+    }
+  } else if (selectionMode === 'category' && activeCategoryId) {
+    
+    if (selectedStalls.has(key)) {
+      const cat = categoriesById[activeCategoryId];
+      if (!cat) return;
+      setStallCategories((prev) => ({
+        ...prev,
+        [key]: {
+          _id: cat._id,
+          name: cat.name,
+          price: cat.price,
+          color: cat.color,
+        },
+      }));
+    }
+  }
+};
 
-  const handleMouseEnter = (row, col) => {
-    if (!isDragging) return;
-    if (selectionMode !== 'select') return;
+const handleMouseDown = (row, col) => {
+  setIsDragging(true);
+  handleStallToggle(row, col);
+};
 
-    const key = stallKeyFrom(row, col);
-    const next = new Set(selectedStalls);
-    next.add(key);
-    setSelectedStalls(next);
-  };
+const handleMouseEnter = (row, col) => {
+  if (!isDragging) return;
+
+  const key = stallKeyFrom(row, col);
+
+  if (selectionMode === 'select') {
+    
+    setHighlightedStalls((prev) => new Set([...prev, key]));
+    
+    if (!selectedStalls.has(key)) {
+      setSelectedStalls((prev) => new Set([...prev, key]));
+    }
+  } else if (selectionMode === 'category' && activeCategoryId) {
+    
+    const cat = categoriesById[activeCategoryId];
+    if (cat && selectedStalls.has(key)) {
+      setStallCategories((prev) => ({
+        ...prev,
+        [key]: {
+          _id: cat._id,
+          name: cat.name,
+          price: cat.price,
+          color: cat.color,
+        },
+      }));
+    }
+  }
+};
 
   const handleMouseUp = () => {
     setIsDragging(false);
@@ -140,19 +170,31 @@ const AdminStallSetup = () => {
     setStallCategories({});
   };
 
-  const applyCategoryBulk = (cat) => {
-    if (!selectedStalls.size) {
-      toast.error('Select stalls first');
-      return;
-    }
-    const next = { ...stallCategories };
-    selectedStalls.forEach((k) => {
-      next[k] = { _id: cat._id, name: cat.name, price: cat.price, color: cat.color };
-    });
-    setStallCategories(next);
-    toast.success(`Applied ${cat.name} to ${selectedStalls.size} stalls`);
-  };
+ const applyCategoryBulk = (cat) => {
+  if (!highlightedStalls.size) {
+    toast.error('Select stalls first');
+    return;
+  }
 
+  const next = { ...stallCategories };
+  highlightedStalls.forEach((k) => {
+    
+    if (selectedStalls.has(k)) {
+      next[k] = {
+        _id: cat._id,
+        name: cat.name,
+        price: cat.price,
+        color: cat.color,
+      };
+    }
+  });
+
+  setStallCategories(next);
+  toast.success(`Applied ${cat.name} to ${highlightedStalls.size} stalls`);
+
+  
+  setHighlightedStalls(new Set());
+};
   const getStallVisual = (row, col) => {
     const key = stallKeyFrom(row, col);
     const selected = selectedStalls.has(key);
@@ -259,7 +301,7 @@ const AdminStallSetup = () => {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      {/* Header */}
+      {}
       <div className="border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -301,10 +343,10 @@ const AdminStallSetup = () => {
         </div>
       </div>
 
-      {/* Content */}
+      {}
       <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 space-y-4 sm:space-y-5">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
-          {/* Seat map style grid */}
+          {}
           <section className="lg:col-span-2 rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-4">
             <div className="flex items-center justify-between mb-2 sm:mb-3">
               <div>
@@ -332,7 +374,7 @@ const AdminStallSetup = () => {
             </div>
 
             <div className="relative overflow-auto rounded-lg border border-slate-100 bg-slate-50/80 p-2 sm:p-3">
-              {/* Column labels */}
+              {}
               <div className="ml-8 flex justify-center gap-1 mb-1">
                 {Array.from({ length: gridSize.columns }, (_, c) => (
                   <div
@@ -352,7 +394,7 @@ const AdminStallSetup = () => {
                       key={row}
                       className="flex items-center gap-1 justify-center"
                     >
-                      {/* Row label */}
+                      {}
                       <div className="w-6 text-[10px] text-slate-400 text-right pr-1">
                         {row}
                       </div>
@@ -386,9 +428,9 @@ const AdminStallSetup = () => {
             </div>
           </section>
 
-          {/* Right panel: modes + categories + stats */}
+          {}
           <section className="space-y-3 sm:space-y-4">
-            {/* Mode */}
+            {}
             <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-3.5">
               <p className="text-xs font-semibold text-slate-900 mb-2">
                 Selection mode
@@ -419,7 +461,7 @@ const AdminStallSetup = () => {
               </div>
             </div>
 
-            {/* Categories */}
+            {}
             <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-3.5">
               <p className="text-xs font-semibold text-slate-900 mb-2">
                 Categories
@@ -477,7 +519,7 @@ const AdminStallSetup = () => {
               </div>
             </div>
 
-            {/* Stats */}
+            {}
             <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-3.5">
               <p className="text-xs font-semibold text-slate-900 mb-2">
                 Summary
@@ -510,7 +552,7 @@ const AdminStallSetup = () => {
               </div>
             </div>
 
-            {/* Legend */}
+            {}
             <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-3.5">
               <p className="text-xs font-semibold text-slate-900 mb-2">
                 Legend

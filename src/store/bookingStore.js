@@ -2,16 +2,16 @@ import { create } from 'zustand';
 import api from '../services/api';
 
 export const useBookingStore = create((set, get) => ({
-  selectedStalls: [],        // [{ stallId, row, column, category }]
+  selectedStalls: [],        
   currentEvent: null,
-  lockedStalls: [],          // [stallId]
+  lockedStalls: [],          
   lockExpiry: null,
   isLoading: false,
   totalAmount: 0,
 
   setCurrentEvent: (event) => set({ currentEvent: event }),
 
-  // Accepts array OR updater function
+  
   setSelectedStalls: (updater) => {
     const prev = get().selectedStalls;
     const next =

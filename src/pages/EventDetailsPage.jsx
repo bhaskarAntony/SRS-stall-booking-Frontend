@@ -110,7 +110,7 @@ const EventDetailsPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
+      {}
       <div className="border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="max-w-5xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
           <div className="flex items-center gap-2 mb-3">
@@ -142,7 +142,7 @@ const EventDetailsPage = () => {
               )}
             </div>
 
-            {/* Booking summary (compact on desktop header) */}
+            {}
             <div className="hidden md:flex flex-col items-end gap-1 text-[11px] text-slate-600">
               <p>
                 {event.availableStalls} of {event.stallLayout?.totalStalls || 0}{' '}
@@ -159,12 +159,12 @@ const EventDetailsPage = () => {
         </div>
       </div>
 
-      {/* Main content */}
+      {}
       <div className="max-w-5xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 space-y-4 sm:space-y-5">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
-          {/* Left: details */}
+          {}
           <section className="lg:col-span-2 space-y-4 sm:space-y-5">
-            {/* Quick info */}
+            {}
             <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-4">
               <h2 className="text-sm font-semibold text-slate-900 mb-2.5">
                 Event details
@@ -225,7 +225,7 @@ const EventDetailsPage = () => {
 
             </div>
 
-            {/* Organizer */}
+            {}
             <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-4">
               <h2 className="text-sm font-semibold text-slate-900 mb-3">
                 Organizer information
@@ -297,14 +297,14 @@ const EventDetailsPage = () => {
             </div>
           </section>
 
-          {/* Right: booking card */}
+          {}
           <section className="lg:col-span-1">
             <div className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-4">
               <h3 className="text-sm font-semibold text-slate-900 mb-3">
                 Stall booking
               </h3>
 
-              {/* Mobile quick summary */}
+              {}
               <div className="mb-3 md:hidden text-[11px] text-slate-600">
                 <p>
                   {event.availableStalls} of {event.stallLayout?.totalStalls || 0}{' '}

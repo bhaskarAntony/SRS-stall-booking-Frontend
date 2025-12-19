@@ -1,7 +1,7 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-const API_BASE = 'https://srs-stalls-backend-1.onrender.com/api/auth';
+const API_BASE = 'http://localhost:5000/api/auth';
 
 const AuthContext = createContext(null);
 

@@ -13,6 +13,9 @@ import { format, parseISO } from 'date-fns';
 import { eventService } from '../../services/eventService';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorMessage from '../../components/common/ErrorMessage';
+import { Trash } from 'lucide-react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
@@ -58,6 +61,19 @@ const AdminEvents = () => {
     }
   };
 
+  const handleDelete = async (id) =>{
+    if(window.confirm()){
+       const res = await eventService.deleteEvent(id);
+       console.log(res)
+    if(res.status){
+      toast.success("Event deleted Succesfully");
+      fetchEvents();
+    }else{
+      toast.error("failed to deleted Event, Try again to Delete")
+    }
+  }
+  }
+
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
@@ -91,7 +107,7 @@ const AdminEvents = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
+      {}
       <div className="border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
@@ -120,11 +136,11 @@ const AdminEvents = () => {
         </div>
       </div>
 
-      {/* Filters */}
+      {}
       <div className="border-b border-slate-200 bg-white">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-3.5">
           <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3">
-            {/* Search */}
+            {}
             <div className="flex-1 relative">
               <MagnifyingGlassIcon className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
@@ -136,7 +152,7 @@ const AdminEvents = () => {
               />
             </div>
 
-            {/* Status Filter */}
+            {}
             <div className="flex items-center gap-1.5 sm:w-40">
               <FunnelIcon className="hidden sm:block h-4 w-4 text-slate-400" />
               <select
@@ -159,7 +175,7 @@ const AdminEvents = () => {
         </div>
       </div>
 
-      {/* Content */}
+      {}
       <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
         {loading ? (
           <div className="flex justify-center py-10">
@@ -184,7 +200,7 @@ const AdminEvents = () => {
           </div>
         ) : (
           <>
-            {/* Mobile cards */}
+            {}
             <div className="space-y-3 md:hidden">
               {events.map((event) => {
                 const booked = event.bookedStalls || 0;
@@ -269,13 +285,21 @@ const AdminEvents = () => {
                       >
                         <Cog6ToothIcon className="h-3.5 w-3.5" />
                       </Link>
+
+                       <button
+                                 onClick={()=>handleDelete(event._id)}
+                        className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 text-red-600 hover:bg-red-50"
+                        title="Delete"
+                      >
+                        <Trash className="h-3.5 w-3.5" />
+                      </button>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* Desktop table */}
+            {}
             <div className="hidden md:block rounded-xl border border-slate-200 bg-white/95 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="min-w-full text-xs sm:text-sm">
@@ -374,6 +398,14 @@ const AdminEvents = () => {
                               >
                                 <Cog6ToothIcon className="h-3.5 w-3.5" />
                               </Link>
+
+                                 <button
+                                 onClick={()=>handleDelete(event._id)}
+                        className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 text-red-600 hover:bg-red-50"
+                        title="Delete"
+                      >
+                        <Trash className="h-3.5 w-3.5" />
+                      </button>
                             </div>
                           </td>
                         </tr>
@@ -384,7 +416,7 @@ const AdminEvents = () => {
               </div>
             </div>
 
-            {/* Pagination */}
+            {}
             {pagination.totalPages > 1 && (
               <div className="mt-4 sm:mt-5 flex items-center justify-center gap-3">
                 <button

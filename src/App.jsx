@@ -1,4 +1,4 @@
-// src/App.jsx
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
@@ -9,7 +9,7 @@ import AdminRoute from './components/auth/AdminRoute';
 import UserLayout from './components/layout/UserLayout';
 import AdminLayout from './components/layout/AdminLayout';
 
-// User pages
+
 import HomePage from './pages/HomePage';
 import EventsPage from './pages/EventsPage';
 import EventDetailsPage from './pages/EventDetailsPage';
@@ -22,7 +22,7 @@ import ProfilePage from './pages/ProfilePage';
 import BookingsPage from './pages/BookingsPage';
 import BookingDetailsPage from './pages/BookingDetailsPage';
 
-// Admin pages
+
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminEvents from './pages/admin/AdminEvents';
 import AdminEventCreate from './pages/admin/AdminEventCreate';
@@ -50,10 +50,10 @@ function App() {
     >
       <ScrollToTop/>
       <Routes>
-        {/* User layout */}
-       {/* User layout - wraps all user pages */}
+        {}
+       {}
 <Route element={<UserLayout />}>
-  {/* Public routes */}
+  {}
   <Route path="/" element={<HomePage />} />
   <Route path="/events" element={<EventsPage />} />
   <Route path="/events/:id" element={<EventDetailsPage />} />
@@ -61,7 +61,7 @@ function App() {
   <Route path="/register" element={<AuthPage />} />
   <Route path="/verify-otp" element={<VerifyOTPPage />} />
 
-  {/* Protected routes - individually wrapped (this fixes dynamic routes) */}
+  {}
   <Route
     path="/checkout"
     element={
@@ -104,7 +104,7 @@ function App() {
   />
 </Route>
 
-        {/* Admin layout */}
+        {}
        <Route path="/admin" element={<AdminRoute />}>
   <Route element={<AdminLayout />}>
     <Route index element={<AdminDashboard />} />

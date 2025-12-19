@@ -11,6 +11,8 @@ const AdminEventCreate = () => {
     name: '',
     description: '',
     image:'',
+    rows:0,
+    cols:0,
     venue: {
       name: '',
       address: {
@@ -169,7 +171,7 @@ const AdminEventCreate = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
+      {}
       <div className="border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex items-center gap-3">
           <Link
@@ -194,7 +196,7 @@ const AdminEventCreate = () => {
 
       <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-          {/* Basic Information */}
+          {}
           <section className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-4">
             <h2 className="text-sm font-semibold text-slate-900 mb-3">
               Basic information
@@ -225,7 +227,7 @@ const AdminEventCreate = () => {
                   value={formData.image}
                   onChange={handleChange}
                   className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
-                  placeholder="Eg. Diwali Fest 2025"
+                  placeholder="Stall layout URL"
                 />
               </div>
 
@@ -241,6 +243,35 @@ const AdminEventCreate = () => {
                   onChange={handleChange}
                   className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
                   placeholder="Short description for vendors and visitors."
+                />
+              </div>
+               <div>
+                <label className="block text-[11px] font-medium text-slate-600 mb-1.5">
+                  Stall Layout Rows *
+                </label>
+                <input
+                  type="number"
+                  name="rows"
+                  required
+                  value={formData.rows}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  placeholder="10, 20 ..."
+                />
+              </div>
+
+               <div>
+                <label className="block text-[11px] font-medium text-slate-600 mb-1.5">
+                  Stall Layout Columns *
+                </label>
+                <input
+                  type="number"
+                  name="cols"
+                  required
+                  value={formData.cols}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  placeholder="10, 20 ..."
                 />
               </div>
 
@@ -261,7 +292,7 @@ const AdminEventCreate = () => {
             </div>
           </section>
 
-          {/* Venue */}
+          {}
           <section className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-4">
             <h2 className="text-sm font-semibold text-slate-900 mb-3">
               Venue
@@ -341,7 +372,7 @@ const AdminEventCreate = () => {
             </div>
           </section>
 
-          {/* Dates */}
+          {}
           <section className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-4">
             <h2 className="text-sm font-semibold text-slate-900 mb-3">
               Dates
@@ -388,7 +419,7 @@ const AdminEventCreate = () => {
             </div>
           </section>
 
-          {/* Organizer */}
+          {}
           <section className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-4">
             <h2 className="text-sm font-semibold text-slate-900 mb-3">
               Organizer
@@ -452,7 +483,7 @@ const AdminEventCreate = () => {
             </div>
           </section>
 
-          {/* Categories */}
+          {}
           <section className="rounded-xl border border-slate-200 bg-white/95 px-3 sm:px-4 py-3 sm:py-4">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-sm font-semibold text-slate-900">
@@ -524,7 +555,7 @@ const AdminEventCreate = () => {
             </div>
           </section>
 
-          {/* Actions */}
+          {}
           <div className="flex justify-end gap-2 sm:gap-3 pt-1">
             <Link
               to="/admin/events"
